@@ -23,6 +23,7 @@ class memory2Frame: public wxFrame
         memory2Frame(wxWindow* parent,wxWindowID id = -1);
         virtual ~memory2Frame();
         kartenverdecken();
+        Neustart();
     private:
 
         //(*Handlers(memory2Frame)
@@ -32,6 +33,7 @@ class memory2Frame: public wxFrame
 
         //(*Identifiers(memory2Frame)
         static const long idMenuQuit;
+        static const long idMenuRestart;
         static const long idMenuAbout;
         static const long ID_STATUSBAR1;
         //*)

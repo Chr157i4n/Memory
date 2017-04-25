@@ -25,7 +25,7 @@ wxBitmap bild[11],verdeckt;
 
 int kartenanzahl=20;
 
-int zuganzahl=0,karte1X,karte1Y,karte2X,karte2Y,verbleibendekarten=10;
+int zuganzahl=0,karte1X=-1,karte1Y=-1,karte2X=-1,karte2Y=-1,verbleibendekarten=10;
 bool zweitekartegeklickt=false;
 
 
@@ -82,11 +82,6 @@ Spielfeld Spielfeld[5][4];
 
 
 
-
-
-
-
-
 memory2Frame::memory2Frame(wxWindow* parent,wxWindowID id)
 {
 
@@ -113,17 +108,20 @@ verdeckt.LoadFile("verdeckt.jpg",wxBITMAP_TYPE_JPEG);
     wxMenuBar* MenuBar1;
     wxMenuItem* MenuItem1;
     wxMenuItem* MenuItem2;
+    wxMenuItem* MenuItem3;
 
     Create(parent, id, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("id"));
     MenuBar1 = new wxMenuBar();
     Menu1 = new wxMenu();
-    MenuItem1 = new wxMenuItem(Menu1, idMenuQuit, _("Quit\tAlt-F4"), _("Quit the application"), wxITEM_NORMAL);
+    MenuItem1 = new wxMenuItem(Menu1, 800, _("Neustart\tR"), _("Startet das Spiel neu"), wxITEM_NORMAL);
     Menu1->Append(MenuItem1);
-    MenuBar1->Append(Menu1, _("&File"));
+    MenuItem3 = new wxMenuItem(Menu1, idMenuQuit, _("Beenden\tAlt-F4"), _("Beendet das Spiel"), wxITEM_NORMAL);
+    Menu1->Append(MenuItem3);
+    MenuBar1->Append(Menu1, _("&Spiel"));
     Menu2 = new wxMenu();
-    MenuItem2 = new wxMenuItem(Menu2, idMenuAbout, _("About\tF1"), _("Show info about this application"), wxITEM_NORMAL);
+    MenuItem2 = new wxMenuItem(Menu2, idMenuAbout, _("Info\tF1"), _("Zeigt Infos über das Spiel"), wxITEM_NORMAL);
     Menu2->Append(MenuItem2);
-    MenuBar1->Append(Menu2, _("Help"));
+    MenuBar1->Append(Menu2, _("Hilfe"));
     SetMenuBar(MenuBar1);
     StatusBar1 = new wxStatusBar(this, ID_STATUSBAR1, 0, _T("ID_STATUSBAR1"));
     int __wxStatusBarWidths_1[1] = { -1 };
@@ -132,67 +130,18 @@ verdeckt.LoadFile("verdeckt.jpg",wxBITMAP_TYPE_JPEG);
     StatusBar1->SetStatusStyles(1,__wxStatusBarStyles_1);
     SetStatusBar(StatusBar1);
 
+    Connect(800,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&memory2Frame::Neustart);
     Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&memory2Frame::OnQuit);
     Connect(idMenuAbout,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&memory2Frame::OnAbout);
     //*)
 
 
-
-      for(int x=0; x<6; x++)
-    {
-        for(int y=0; y<5; y++)
-        {
-            Spielfeld[x][y].zahl=0;
-
-        }
-    }
-
-
-    srand (time(NULL));
-    int i = 1;
-    bool spielpaar = false;
-    while(i<=10)
-    {
-        int x,y;
-        bool kartegesetzt=false;
-
-        while(!kartegesetzt)
-        {
-
-            x = rand() % 5 ;
-            y = rand() % 4 ;
-               if(Spielfeld[x][y].zahl==0)
-                {
-                    kartegesetzt=true;
-                    Spielfeld[x][y].zahl=i;
-                }
-
-
-        }
-
-            if (!spielpaar)
-            {
-                spielpaar=true;
-            }
-            else
-            {
-                spielpaar=false;
-                i++;
-            }
-
-
-    }
-
-
-
-
-SetSize(750,580);
-
+SetSize(640,580);
 
     int x=20;
     int y=20;
 
-    for(int i=0;i<20;i++)
+  for(int i=0;i<20;i++)
     {
 
         button[i] = new wxBitmapButton(this,1000+i,verdeckt,wxPoint(x,y),wxSize(100, 100));
@@ -203,6 +152,8 @@ SetSize(750,580);
         if (x>=600) {x=20; y=y+120;}
 
     }
+
+    Neustart();
 
 }
 
@@ -265,7 +216,67 @@ void memory2Frame::OnButton(wxCommandEvent & event)
 
 
 
+memory2Frame::Neustart()
+{
+   for(int x=0; x<6; x++)
+    {
+        for(int y=0; y<5; y++)
+        {
+            Spielfeld[x][y].zahl=0;
 
+        }
+    }
+
+
+    srand (time(NULL));
+    int i = 1;
+    bool spielpaar = false;
+    while(i<=10)
+    {
+        int x,y;
+        bool kartegesetzt=false;
+
+        while(!kartegesetzt)
+        {
+
+            x = rand() % 5 ;
+            y = rand() % 4 ;
+               if(Spielfeld[x][y].zahl==0)
+                {
+                    kartegesetzt=true;
+                    Spielfeld[x][y].zahl=i;
+
+                }
+
+
+        }
+
+            if (!spielpaar)
+            {
+                spielpaar=true;
+            }
+            else
+            {
+                spielpaar=false;
+                i++;
+            }
+
+            zuganzahl=0;
+            verbleibendekarten=10;
+            karte1X=-1; karte1Y=-1; karte2X=-1; karte2Y=-1;
+            zweitekartegeklickt=false;
+
+    }
+
+for(int i=0;i<20;i++)
+    {
+
+        button[i]->SetBitmap(verdeckt);
+        button[i]->Enable(true);
+    }
+
+
+}
 
 
 
