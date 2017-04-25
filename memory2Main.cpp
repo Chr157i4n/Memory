@@ -19,8 +19,9 @@
 #include <wx/string.h>
 //*)
 
-wxBitmap bild1,bild2,bild3,bild4,bild5,bild6,bild7,bild8,bild9,bild10,verdeckt;
-int spielfeld[5][4];
+//wxBitmap bild1,bild2,bild3,bild4,bild5,bild6,bild7,bild8,bild9,bild10,verdeckt;
+wxBitmap bild[11],verdeckt;
+
 int zuganzahl=0,karte1X,karte1Y,karte2X,karte2Y,verbleibendekarten=10;
 bool zweitekartegeklickt=false;
 
@@ -81,6 +82,18 @@ BEGIN_EVENT_TABLE(memory2Frame,wxFrame)
     //(*EventTable(memory2Frame)
     //*)
 END_EVENT_TABLE()
+
+
+
+class Spielfeld {
+
+public:
+    int zahl;
+
+};
+
+Spielfeld Spielfeld[5][4];
+
 
 memory2Frame::memory2Frame(wxWindow* parent,wxWindowID id)
 {
@@ -177,20 +190,22 @@ memory2Frame::memory2Frame(wxWindow* parent,wxWindowID id)
     Connect(ID_BITMAPBUTTON20,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&memory2Frame::OnBitmapButton20Click);
     Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&memory2Frame::OnQuit);
     Connect(idMenuAbout,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&memory2Frame::OnAbout);
-    Connect(wxEVT_PAINT,(wxObjectEventFunction)&memory2Frame::OnPaint);
+
     //*)
 
 
-bild1.LoadFile("pfingstrose.jpg",wxBITMAP_TYPE_JPEG);
-bild2.LoadFile("sommer1.jpg",wxBITMAP_TYPE_JPEG);
-bild3.LoadFile("sommer2.jpg",wxBITMAP_TYPE_JPEG);
-bild4.LoadFile("sommer3.jpg",wxBITMAP_TYPE_JPEG);
-bild5.LoadFile("nelke.jpg",wxBITMAP_TYPE_JPEG);
-bild6.LoadFile("sommer5.jpg",wxBITMAP_TYPE_JPEG);
-bild7.LoadFile("sommer6.jpg",wxBITMAP_TYPE_JPEG);
-bild8.LoadFile("sommer7.jpg",wxBITMAP_TYPE_JPEG);
-bild9.LoadFile("tokio1.jpg",wxBITMAP_TYPE_JPEG);
-bild10.LoadFile("hundefutter.jpg",wxBITMAP_TYPE_JPEG);
+bild[1].LoadFile("pfingstrose.jpg",wxBITMAP_TYPE_JPEG);
+bild[2].LoadFile("sommer1.jpg",wxBITMAP_TYPE_JPEG);
+bild[3].LoadFile("sommer2.jpg",wxBITMAP_TYPE_JPEG);
+bild[4].LoadFile("sommer3.jpg",wxBITMAP_TYPE_JPEG);
+bild[5].LoadFile("nelke.jpg",wxBITMAP_TYPE_JPEG);
+bild[6].LoadFile("sommer5.jpg",wxBITMAP_TYPE_JPEG);
+bild[7].LoadFile("sommer6.jpg",wxBITMAP_TYPE_JPEG);
+bild[8].LoadFile("sommer7.jpg",wxBITMAP_TYPE_JPEG);
+bild[9].LoadFile("tokio1.jpg",wxBITMAP_TYPE_JPEG);
+bild[10].LoadFile("hundefutter.jpg",wxBITMAP_TYPE_JPEG);
+
+
 verdeckt.LoadFile("verdeckt.jpg",wxBITMAP_TYPE_JPEG);
 
 BitmapButton1->SetBitmap(verdeckt);
@@ -218,7 +233,7 @@ BitmapButton20->SetBitmap(verdeckt);
     {
         for(int y=0; y<5; y++)
         {
-            spielfeld[x][y]=0;
+            Spielfeld[x][y].zahl=0;
         }
     }
 
@@ -236,10 +251,10 @@ BitmapButton20->SetBitmap(verdeckt);
 
             x = rand() % 5 ;
             y = rand() % 4 ;
-               if(spielfeld[x][y]==0)
+               if(Spielfeld[x][y].zahl==0)
                 {
                     kartegesetzt=true;
-                    spielfeld[x][y]=i;
+                    Spielfeld[x][y].zahl=i;
                 }
 
 
@@ -280,55 +295,11 @@ void memory2Frame::OnAbout(wxCommandEvent& event)
     wxMessageBox(msg, _("Welcome to..."));
 }
 
-void memory2Frame::OnPaint(wxPaintEvent& event)
-{
-
-     //wxPaintDC dc(this);
-
-     /* for(int x=0; x<5; x++)
-    {
-        for(int y=0; y<4; y++)
-        {
-            switch (spielfeld[x][y])
-               {
-                case 1:     dc.DrawBitmap(bild1,x*120+20,y*120+20);     break;
-                case 2:     dc.DrawBitmap(bild2,x*120+20,y*120+20);     break;
-                case 3:     dc.DrawBitmap(bild3,x*120+20,y*120+20);     break;
-                case 4:     dc.DrawBitmap(bild4,x*120+20,y*120+20);     break;
-                case 5:     dc.DrawBitmap(bild5,x*120+20,y*120+20);     break;
-                case 6:     dc.DrawBitmap(bild6,x*120+20,y*120+20);     break;
-                case 7:     dc.DrawBitmap(bild7,x*120+20,y*120+20);     break;
-                case 8:     dc.DrawBitmap(bild8,x*120+20,y*120+20);     break;
-                case 9:     dc.DrawBitmap(bild9,x*120+20,y*120+20);     break;
-                case 10:    dc.DrawBitmap(bild10,x*120+20,y*120+20);    break;
-               }
-            }
-
-        }*/
-
-  /*   dc.SetTextForeground( *wxBLUE );
-    dc.SetFont(wxFontInfo(20).FaceName("Comic Sans MS").Light());
-    dc.DrawText("Züge: ",650,50);
-    //dc.DrawText(zuganzahl,650,50);*/
-
-
-
-}
-
-/*void memory2Frame::OnLeftDown(wxMouseEvent& event)
-{
-    int mausX = (GetScreenPosition().x-20)/120;
-    int mausY = (GetScreenPosition().y-20)/120;
-    //wxMessagebox(wxT());
-    spielfeld[mausX][mausY]=0;
-
-    Refresh();
-}*/
 memory2Frame::kartenverdecken()
 {
     zuganzahl=zuganzahl+2;
 
-  if (spielfeld[karte1X][karte1Y]!=spielfeld[karte2X][karte2Y])
+  if (Spielfeld[karte1X][karte1Y].zahl!=Spielfeld[karte2X][karte2Y].zahl)
   {
         switch ((karte1X+1)+(karte1Y*5))
           {
@@ -434,7 +405,10 @@ memory2Frame::kartenverdecken()
 
 void memory2Frame::OnBitmapButton1Click(wxCommandEvent& event)
 {
-switch (spielfeld[0][0])
+
+     BitmapButton1->SetBitmap(bild[Spielfeld[0][0].zahl]);
+    /*
+switch (Spielfeld[0][0])
                {
                 case 1:     BitmapButton1->SetBitmap(bild1);     break;
                 case 2:     BitmapButton1->SetBitmap(bild2);     break;
@@ -446,7 +420,7 @@ switch (spielfeld[0][0])
                 case 8:     BitmapButton1->SetBitmap(bild8);     break;
                 case 9:     BitmapButton1->SetBitmap(bild9);     break;
                 case 10:    BitmapButton1->SetBitmap(bild10);    break;
-               }
+               }*/
     if (!zweitekartegeklickt)
     {
         zweitekartegeklickt=true;
@@ -467,19 +441,9 @@ switch (spielfeld[0][0])
 
 void memory2Frame::OnBitmapButton2Click(wxCommandEvent& event)
 {
- switch (spielfeld[1][0])
-               {
-                case 1:     BitmapButton2->SetBitmap(bild1);     break;
-                case 2:     BitmapButton2->SetBitmap(bild2);     break;
-                case 3:     BitmapButton2->SetBitmap(bild3);     break;
-                case 4:     BitmapButton2->SetBitmap(bild4);     break;
-                case 5:     BitmapButton2->SetBitmap(bild5);     break;
-                case 6:     BitmapButton2->SetBitmap(bild6);     break;
-                case 7:     BitmapButton2->SetBitmap(bild7);     break;
-                case 8:     BitmapButton2->SetBitmap(bild8);     break;
-                case 9:     BitmapButton2->SetBitmap(bild9);     break;
-                case 10:    BitmapButton2->SetBitmap(bild10);    break;
-               }
+
+ BitmapButton2->SetBitmap(bild[Spielfeld[1][0].zahl]);
+
   if (!zweitekartegeklickt)
     {
         zweitekartegeklickt=true;
@@ -499,19 +463,8 @@ void memory2Frame::OnBitmapButton2Click(wxCommandEvent& event)
 
 void memory2Frame::OnBitmapButton3Click(wxCommandEvent& event)
 {
-    switch (spielfeld[2][0])
-               {
-                case 1:     BitmapButton3->SetBitmap(bild1);     break;
-                case 2:     BitmapButton3->SetBitmap(bild2);     break;
-                case 3:     BitmapButton3->SetBitmap(bild3);     break;
-                case 4:     BitmapButton3->SetBitmap(bild4);     break;
-                case 5:     BitmapButton3->SetBitmap(bild5);     break;
-                case 6:     BitmapButton3->SetBitmap(bild6);     break;
-                case 7:     BitmapButton3->SetBitmap(bild7);     break;
-                case 8:     BitmapButton3->SetBitmap(bild8);     break;
-                case 9:     BitmapButton3->SetBitmap(bild9);     break;
-                case 10:    BitmapButton3->SetBitmap(bild10);    break;
-               }
+   BitmapButton3->SetBitmap(bild[Spielfeld[2][0].zahl]);
+
   if (!zweitekartegeklickt)
     {
         zweitekartegeklickt=true;
@@ -531,19 +484,8 @@ void memory2Frame::OnBitmapButton3Click(wxCommandEvent& event)
 
 void memory2Frame::OnBitmapButton4Click(wxCommandEvent& event)
 {
-    switch (spielfeld[3][0])
-               {
-                case 1:     BitmapButton4->SetBitmap(bild1);     break;
-                case 2:     BitmapButton4->SetBitmap(bild2);     break;
-                case 3:     BitmapButton4->SetBitmap(bild3);     break;
-                case 4:     BitmapButton4->SetBitmap(bild4);     break;
-                case 5:     BitmapButton4->SetBitmap(bild5);     break;
-                case 6:     BitmapButton4->SetBitmap(bild6);     break;
-                case 7:     BitmapButton4->SetBitmap(bild7);     break;
-                case 8:     BitmapButton4->SetBitmap(bild8);     break;
-                case 9:     BitmapButton4->SetBitmap(bild9);     break;
-                case 10:    BitmapButton4->SetBitmap(bild10);    break;
-               }
+   BitmapButton4->SetBitmap(bild[Spielfeld[3][0].zahl]);
+
   if (!zweitekartegeklickt)
     {
         zweitekartegeklickt=true;
@@ -562,19 +504,8 @@ void memory2Frame::OnBitmapButton4Click(wxCommandEvent& event)
 }
 
 void memory2Frame::OnBitmapButton5Click(wxCommandEvent& event)
-{switch (spielfeld[4][0])
-               {
-                case 1:     BitmapButton5->SetBitmap(bild1);     break;
-                case 2:     BitmapButton5->SetBitmap(bild2);     break;
-                case 3:     BitmapButton5->SetBitmap(bild3);     break;
-                case 4:     BitmapButton5->SetBitmap(bild4);     break;
-                case 5:     BitmapButton5->SetBitmap(bild5);     break;
-                case 6:     BitmapButton5->SetBitmap(bild6);     break;
-                case 7:     BitmapButton5->SetBitmap(bild7);     break;
-                case 8:     BitmapButton5->SetBitmap(bild8);     break;
-                case 9:     BitmapButton5->SetBitmap(bild9);     break;
-                case 10:    BitmapButton5->SetBitmap(bild10);    break;
-               }
+{
+    BitmapButton5->SetBitmap(bild[Spielfeld[4][0].zahl]);
 
   if (!zweitekartegeklickt)
     {
@@ -595,19 +526,8 @@ void memory2Frame::OnBitmapButton5Click(wxCommandEvent& event)
 
 void memory2Frame::OnBitmapButton6Click(wxCommandEvent& event)
 {
-    switch (spielfeld[0][1])
-               {
-                case 1:     BitmapButton6->SetBitmap(bild1);     break;
-                case 2:     BitmapButton6->SetBitmap(bild2);     break;
-                case 3:     BitmapButton6->SetBitmap(bild3);     break;
-                case 4:     BitmapButton6->SetBitmap(bild4);     break;
-                case 5:     BitmapButton6->SetBitmap(bild5);     break;
-                case 6:     BitmapButton6->SetBitmap(bild6);     break;
-                case 7:     BitmapButton6->SetBitmap(bild7);     break;
-                case 8:     BitmapButton6->SetBitmap(bild8);     break;
-                case 9:     BitmapButton6->SetBitmap(bild9);     break;
-                case 10:    BitmapButton6->SetBitmap(bild10);    break;
-               }
+   BitmapButton6->SetBitmap(bild[Spielfeld[0][1].zahl]);
+
   if (!zweitekartegeklickt)
     {
         zweitekartegeklickt=true;
@@ -627,19 +547,8 @@ void memory2Frame::OnBitmapButton6Click(wxCommandEvent& event)
 
 void memory2Frame::OnBitmapButton7Click(wxCommandEvent& event)
 {
-    switch (spielfeld[1][1])
-               {
-                case 1:     BitmapButton7->SetBitmap(bild1);     break;
-                case 2:     BitmapButton7->SetBitmap(bild2);     break;
-                case 3:     BitmapButton7->SetBitmap(bild3);     break;
-                case 4:     BitmapButton7->SetBitmap(bild4);     break;
-                case 5:     BitmapButton7->SetBitmap(bild5);     break;
-                case 6:     BitmapButton7->SetBitmap(bild6);     break;
-                case 7:     BitmapButton7->SetBitmap(bild7);     break;
-                case 8:     BitmapButton7->SetBitmap(bild8);     break;
-                case 9:     BitmapButton7->SetBitmap(bild9);     break;
-                case 10:    BitmapButton7->SetBitmap(bild10);    break;
-               }
+   BitmapButton7->SetBitmap(bild[Spielfeld[1][1].zahl]);
+
   if (!zweitekartegeklickt)
     {
         zweitekartegeklickt=true;
@@ -659,19 +568,7 @@ void memory2Frame::OnBitmapButton7Click(wxCommandEvent& event)
 
 void memory2Frame::OnBitmapButton8Click(wxCommandEvent& event)
 {
-    switch (spielfeld[2][1])
-               {
-                case 1:     BitmapButton8->SetBitmap(bild1);     break;
-                case 2:     BitmapButton8->SetBitmap(bild2);     break;
-                case 3:     BitmapButton8->SetBitmap(bild3);     break;
-                case 4:     BitmapButton8->SetBitmap(bild4);     break;
-                case 5:     BitmapButton8->SetBitmap(bild5);     break;
-                case 6:     BitmapButton8->SetBitmap(bild6);     break;
-                case 7:     BitmapButton8->SetBitmap(bild7);     break;
-                case 8:     BitmapButton8->SetBitmap(bild8);     break;
-                case 9:     BitmapButton8->SetBitmap(bild9);     break;
-                case 10:    BitmapButton8->SetBitmap(bild10);    break;
-               }
+  BitmapButton8->SetBitmap(bild[Spielfeld[2][1].zahl]);
 
   if (!zweitekartegeklickt)
     {
@@ -692,19 +589,8 @@ void memory2Frame::OnBitmapButton8Click(wxCommandEvent& event)
 
 void memory2Frame::OnBitmapButton9Click(wxCommandEvent& event)
 {
-    switch (spielfeld[3][1])
-               {
-                case 1:     BitmapButton9->SetBitmap(bild1);     break;
-                case 2:     BitmapButton9->SetBitmap(bild2);     break;
-                case 3:     BitmapButton9->SetBitmap(bild3);     break;
-                case 4:     BitmapButton9->SetBitmap(bild4);     break;
-                case 5:     BitmapButton9->SetBitmap(bild5);     break;
-                case 6:     BitmapButton9->SetBitmap(bild6);     break;
-                case 7:     BitmapButton9->SetBitmap(bild7);     break;
-                case 8:     BitmapButton9->SetBitmap(bild8);     break;
-                case 9:     BitmapButton9->SetBitmap(bild9);     break;
-                case 10:    BitmapButton9->SetBitmap(bild10);    break;
-               }
+   BitmapButton9->SetBitmap(bild[Spielfeld[3][1].zahl]);
+
   if (!zweitekartegeklickt)
     {
         zweitekartegeklickt=true;
@@ -724,19 +610,8 @@ void memory2Frame::OnBitmapButton9Click(wxCommandEvent& event)
 
 void memory2Frame::OnBitmapButton10Click(wxCommandEvent& event)
 {
-    switch (spielfeld[4][1])
-               {
-                case 1:     BitmapButton10->SetBitmap(bild1);     break;
-                case 2:     BitmapButton10->SetBitmap(bild2);     break;
-                case 3:     BitmapButton10->SetBitmap(bild3);     break;
-                case 4:     BitmapButton10->SetBitmap(bild4);     break;
-                case 5:     BitmapButton10->SetBitmap(bild5);     break;
-                case 6:     BitmapButton10->SetBitmap(bild6);     break;
-                case 7:     BitmapButton10->SetBitmap(bild7);     break;
-                case 8:     BitmapButton10->SetBitmap(bild8);     break;
-                case 9:     BitmapButton10->SetBitmap(bild9);     break;
-                case 10:    BitmapButton10->SetBitmap(bild10);    break;
-               }
+  BitmapButton10->SetBitmap(bild[Spielfeld[4][1].zahl]);
+
   if (!zweitekartegeklickt)
     {
         zweitekartegeklickt=true;
@@ -756,19 +631,8 @@ void memory2Frame::OnBitmapButton10Click(wxCommandEvent& event)
 
 void memory2Frame::OnBitmapButton11Click(wxCommandEvent& event)
 {
-    switch (spielfeld[0][2])
-               {
-                case 1:     BitmapButton11->SetBitmap(bild1);     break;
-                case 2:     BitmapButton11->SetBitmap(bild2);     break;
-                case 3:     BitmapButton11->SetBitmap(bild3);     break;
-                case 4:     BitmapButton11->SetBitmap(bild4);     break;
-                case 5:     BitmapButton11->SetBitmap(bild5);     break;
-                case 6:     BitmapButton11->SetBitmap(bild6);     break;
-                case 7:     BitmapButton11->SetBitmap(bild7);     break;
-                case 8:     BitmapButton11->SetBitmap(bild8);     break;
-                case 9:     BitmapButton11->SetBitmap(bild9);     break;
-                case 10:    BitmapButton11->SetBitmap(bild10);    break;
-               }
+
+  BitmapButton11->SetBitmap(bild[Spielfeld[0][2].zahl]);
 
   if (!zweitekartegeklickt)
     {
@@ -789,19 +653,7 @@ void memory2Frame::OnBitmapButton11Click(wxCommandEvent& event)
 
 void memory2Frame::OnBitmapButton12Click(wxCommandEvent& event)
 {
-    switch (spielfeld[1][2])
-               {
-                case 1:     BitmapButton12->SetBitmap(bild1);     break;
-                case 2:     BitmapButton12->SetBitmap(bild2);     break;
-                case 3:     BitmapButton12->SetBitmap(bild3);     break;
-                case 4:     BitmapButton12->SetBitmap(bild4);     break;
-                case 5:     BitmapButton12->SetBitmap(bild5);     break;
-                case 6:     BitmapButton12->SetBitmap(bild6);     break;
-                case 7:     BitmapButton12->SetBitmap(bild7);     break;
-                case 8:     BitmapButton12->SetBitmap(bild8);     break;
-                case 9:     BitmapButton12->SetBitmap(bild9);     break;
-                case 10:    BitmapButton12->SetBitmap(bild10);    break;
-               }
+   BitmapButton12->SetBitmap(bild[Spielfeld[1][2].zahl]);
 
   if (!zweitekartegeklickt)
     {
@@ -822,19 +674,8 @@ void memory2Frame::OnBitmapButton12Click(wxCommandEvent& event)
 
 void memory2Frame::OnBitmapButton13Click(wxCommandEvent& event)
 {
-    switch (spielfeld[2][2])
-               {
-                case 1:     BitmapButton13->SetBitmap(bild1);     break;
-                case 2:     BitmapButton13->SetBitmap(bild2);     break;
-                case 3:     BitmapButton13->SetBitmap(bild3);     break;
-                case 4:     BitmapButton13->SetBitmap(bild4);     break;
-                case 5:     BitmapButton13->SetBitmap(bild5);     break;
-                case 6:     BitmapButton13->SetBitmap(bild6);     break;
-                case 7:     BitmapButton13->SetBitmap(bild7);     break;
-                case 8:     BitmapButton13->SetBitmap(bild8);     break;
-                case 9:     BitmapButton13->SetBitmap(bild9);     break;
-                case 10:    BitmapButton13->SetBitmap(bild10);    break;
-               }
+   BitmapButton13->SetBitmap(bild[Spielfeld[2][2].zahl]);
+
 
   if (!zweitekartegeklickt)
     {
@@ -854,19 +695,10 @@ void memory2Frame::OnBitmapButton13Click(wxCommandEvent& event)
 }
 
 void memory2Frame::OnBitmapButton14Click(wxCommandEvent& event)
-{switch (spielfeld[3][2])
-               {
-                case 1:     BitmapButton14->SetBitmap(bild1);     break;
-                case 2:     BitmapButton14->SetBitmap(bild2);     break;
-                case 3:     BitmapButton14->SetBitmap(bild3);     break;
-                case 4:     BitmapButton14->SetBitmap(bild4);     break;
-                case 5:     BitmapButton14->SetBitmap(bild5);     break;
-                case 6:     BitmapButton14->SetBitmap(bild6);     break;
-                case 7:     BitmapButton14->SetBitmap(bild7);     break;
-                case 8:     BitmapButton14->SetBitmap(bild8);     break;
-                case 9:     BitmapButton14->SetBitmap(bild9);     break;
-                case 10:    BitmapButton14->SetBitmap(bild10);    break;
-               }
+{
+
+    BitmapButton14->SetBitmap(bild[Spielfeld[3][2].zahl]);
+
   if (!zweitekartegeklickt)
     {
         zweitekartegeklickt=true;
@@ -886,19 +718,8 @@ void memory2Frame::OnBitmapButton14Click(wxCommandEvent& event)
 
 void memory2Frame::OnBitmapButton15Click(wxCommandEvent& event)
 {
-    switch (spielfeld[4][2])
-               {
-                case 1:     BitmapButton15->SetBitmap(bild1);     break;
-                case 2:     BitmapButton15->SetBitmap(bild2);     break;
-                case 3:     BitmapButton15->SetBitmap(bild3);     break;
-                case 4:     BitmapButton15->SetBitmap(bild4);     break;
-                case 5:     BitmapButton15->SetBitmap(bild5);     break;
-                case 6:     BitmapButton15->SetBitmap(bild6);     break;
-                case 7:     BitmapButton15->SetBitmap(bild7);     break;
-                case 8:     BitmapButton15->SetBitmap(bild8);     break;
-                case 9:     BitmapButton15->SetBitmap(bild9);     break;
-                case 10:    BitmapButton15->SetBitmap(bild10);    break;
-               }
+   BitmapButton15->SetBitmap(bild[Spielfeld[4][2].zahl]);
+
   if (!zweitekartegeklickt)
     {
         zweitekartegeklickt=true;
@@ -918,20 +739,7 @@ void memory2Frame::OnBitmapButton15Click(wxCommandEvent& event)
 
 void memory2Frame::OnBitmapButton16Click(wxCommandEvent& event)
 {
-    switch (spielfeld[0][3])
-               {
-                case 1:     BitmapButton16->SetBitmap(bild1);     break;
-                case 2:     BitmapButton16->SetBitmap(bild2);     break;
-                case 3:     BitmapButton16->SetBitmap(bild3);     break;
-                case 4:     BitmapButton16->SetBitmap(bild4);     break;
-                case 5:     BitmapButton16->SetBitmap(bild5);     break;
-                case 6:     BitmapButton16->SetBitmap(bild6);     break;
-                case 7:     BitmapButton16->SetBitmap(bild7);     break;
-                case 8:     BitmapButton16->SetBitmap(bild8);     break;
-                case 9:     BitmapButton16->SetBitmap(bild9);     break;
-                case 10:    BitmapButton16->SetBitmap(bild10);    break;
-               }
-
+   BitmapButton16->SetBitmap(bild[Spielfeld[0][3].zahl]);
   if (!zweitekartegeklickt)
     {
         zweitekartegeklickt=true;
@@ -950,19 +758,9 @@ void memory2Frame::OnBitmapButton16Click(wxCommandEvent& event)
 }
 
 void memory2Frame::OnBitmapButton17Click(wxCommandEvent& event)
-{switch (spielfeld[1][3])
-               {
-                case 1:     BitmapButton17->SetBitmap(bild1);     break;
-                case 2:     BitmapButton17->SetBitmap(bild2);     break;
-                case 3:     BitmapButton17->SetBitmap(bild3);     break;
-                case 4:     BitmapButton17->SetBitmap(bild4);     break;
-                case 5:     BitmapButton17->SetBitmap(bild5);     break;
-                case 6:     BitmapButton17->SetBitmap(bild6);     break;
-                case 7:     BitmapButton17->SetBitmap(bild7);     break;
-                case 8:     BitmapButton17->SetBitmap(bild8);     break;
-                case 9:     BitmapButton17->SetBitmap(bild9);     break;
-                case 10:    BitmapButton17->SetBitmap(bild10);    break;
-               }
+{
+    BitmapButton17->SetBitmap(bild[Spielfeld[1][3].zahl]);
+
 if (!zweitekartegeklickt)
     {
         zweitekartegeklickt=true;
@@ -982,19 +780,7 @@ if (!zweitekartegeklickt)
 
 void memory2Frame::OnBitmapButton18Click(wxCommandEvent& event)
 {
-    switch (spielfeld[2][3])
-               {
-                case 1:     BitmapButton18->SetBitmap(bild1);     break;
-                case 2:     BitmapButton18->SetBitmap(bild2);     break;
-                case 3:     BitmapButton18->SetBitmap(bild3);     break;
-                case 4:     BitmapButton18->SetBitmap(bild4);     break;
-                case 5:     BitmapButton18->SetBitmap(bild5);     break;
-                case 6:     BitmapButton18->SetBitmap(bild6);     break;
-                case 7:     BitmapButton18->SetBitmap(bild7);     break;
-                case 8:     BitmapButton18->SetBitmap(bild8);     break;
-                case 9:     BitmapButton18->SetBitmap(bild9);     break;
-                case 10:    BitmapButton18->SetBitmap(bild10);    break;
-               }
+   BitmapButton18->SetBitmap(bild[Spielfeld[2][3].zahl]);
 
 if (!zweitekartegeklickt)
     {
@@ -1014,19 +800,8 @@ if (!zweitekartegeklickt)
 }
 
 void memory2Frame::OnBitmapButton19Click(wxCommandEvent& event)
-{switch (spielfeld[3][3])
-               {
-                case 1:     BitmapButton19->SetBitmap(bild1);     break;
-                case 2:     BitmapButton19->SetBitmap(bild2);     break;
-                case 3:     BitmapButton19->SetBitmap(bild3);     break;
-                case 4:     BitmapButton19->SetBitmap(bild4);     break;
-                case 5:     BitmapButton19->SetBitmap(bild5);     break;
-                case 6:     BitmapButton19->SetBitmap(bild6);     break;
-                case 7:     BitmapButton19->SetBitmap(bild7);     break;
-                case 8:     BitmapButton19->SetBitmap(bild8);     break;
-                case 9:     BitmapButton19->SetBitmap(bild9);     break;
-                case 10:    BitmapButton19->SetBitmap(bild10);    break;
-               }
+{
+    BitmapButton19->SetBitmap(bild[Spielfeld[3][3].zahl]);
 
 if (!zweitekartegeklickt)
     {
@@ -1046,19 +821,9 @@ if (!zweitekartegeklickt)
 }
 
 void memory2Frame::OnBitmapButton20Click(wxCommandEvent& event)
-{switch (spielfeld[4][3])
-               {
-                case 1:     BitmapButton20->SetBitmap(bild1);     break;
-                case 2:     BitmapButton20->SetBitmap(bild2);     break;
-                case 3:     BitmapButton20->SetBitmap(bild3);     break;
-                case 4:     BitmapButton20->SetBitmap(bild4);     break;
-                case 5:     BitmapButton20->SetBitmap(bild5);     break;
-                case 6:     BitmapButton20->SetBitmap(bild6);     break;
-                case 7:     BitmapButton20->SetBitmap(bild7);     break;
-                case 8:     BitmapButton20->SetBitmap(bild8);     break;
-                case 9:     BitmapButton20->SetBitmap(bild9);     break;
-                case 10:    BitmapButton20->SetBitmap(bild10);    break;
-               }
+{
+    BitmapButton20->SetBitmap(bild[Spielfeld[4][3].zahl]);
+
 if (!zweitekartegeklickt)
     {
         zweitekartegeklickt=true;
